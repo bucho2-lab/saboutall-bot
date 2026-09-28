@@ -44,7 +44,8 @@ jobs:
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_BRANCH: ${{ github.ref_name }}
-          CHANNEL_HANDLE: ${{ vars.CHANNEL_HANDLE }}
+          # аккаунт, куда публикуем; бот сверяет с ним токен и пишет его на картинке
+          CHANNEL_HANDLE: "@bucho2"
           # пока переменная PUBLISH не равна true, бот только готовит посты
           PUBLISH: ${{ inputs.publish && 'true' || vars.PUBLISH || 'false' }}
         run: python main.py --kind "${{ inputs.kind || 'auto' }}"
