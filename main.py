@@ -95,7 +95,6 @@ def main() -> None:
         path, data = queued
         post = Post(chosen_index=0, **{k: data[k] for k in ("category", "title", "body", "caption", "hashtags")})
         item = Item(data.get("kind", "news"), data.get("source_title", data["title"]), "", data.get("url", ""), data["source"])
-        path.unlink()
         print(f"Пост из очереди: {path.name}")
     elif candidates:
         post, item = write_post(candidates)
@@ -119,6 +118,8 @@ def main() -> None:
         image_url = upload(image_path)
         record["published_id"] = publish_photo(image_url, caption)
         print(f"Опубликовано: {record['published_id']}")
+        if queued:
+            queued[0].unlink()  # в режиме предпросмотра пост остаётся в очереди
     else:
         print("Режим предпросмотра: в Instagram ничего не отправлено (включите PUBLISH=true или --publish).")
 
