@@ -36,7 +36,7 @@ def _search(query: str, limit: int = 12) -> list[dict]:
     return sorted(pages.values(), key=lambda p: p.get("index", 0))
 
 
-def fetch_photos(queries: list[str], out_dir: Path, per_query: int = 1, total: int = 3) -> list[Photo]:
+def fetch_photos(queries: list[str], out_dir: Path, per_query: int = 2, total: int = 3) -> list[Photo]:
     """По одному-два крупных фото на каждый запрос, всего не больше total."""
     out_dir.mkdir(parents=True, exist_ok=True)
     photos: list[Photo] = []
