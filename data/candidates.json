@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-28T17:05+00:00",
+ "updated": "2026-09-28T17:27+00:00",
  "news": [
   {
    "kind": "news",
@@ -87,13 +87,6 @@
   },
   {
    "kind": "news",
-   "title": "Спутники нашли в Андах гигантские каменные круги неизвестного происхождения",
-   "summary": "Высоко в Андах, в труднодоступной местности на высоте более 3000 метров над уровнем моря, археологи готовятся начать изучение странных каменных сооружений, которые пока принесли больше вопросов, чем ответов. Очертания огромных геометрических фигур впервые заметили на спутниковых снимках в приложении Google Earth.",
-   "url": "https://naked-science.ru/article/archeology/andy-krugi-sputnikovye-snimki",
-   "source": "Naked Science"
-  },
-  {
-   "kind": "news",
    "title": "В озерах Европы нашли 205 новых видов вирусов",
    "summary": "Гигантские вирусы могут влиять на жизнь озер, но их разнообразие в пресной воде пока изучено слабо. Исследовав 87 европейских озер, ученые восстановили геномы 208 таких вирусов, причем 205 из них могут относиться к новым видам.",
    "url": "https://naked-science.ru/article/biology/ozera-virusy",
@@ -129,6 +122,83 @@
   },
   {
    "kind": "news",
+   "title": "Популярная юмористка с ТНТ заявила о нежелании возвращаться в деревню",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/derevnya/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Украинский КПП на границе с Польшей подвергся удару",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/ukrainskiy-kpp-na-granitse-s-polshey-podvergsya-udaru/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Информатору ВСУ из российского региона вынесли приговор",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/informatoru-vsu-iz-rossiyskogo-regiona-vynesli-prigovor/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Путин дал связанное с новой численностью ВС России поручение",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/putin-dal-svyazannoe-s-novoy-chislennostyu-vs-rossii-poruchenie/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Аглая Тарасова снялась в оголяющем тело образе",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/aglaya-tarasova/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Ставший звездой вратарь сборной Кабо-Верде рассказал о потере покоя и крахе личной жизни",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/stavshiy-zvezdoy-vratar-sbornoy-kabo-verde-rasskazal-o-potere-pokoya-i-krahe-lichnoy-zhizni/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Раскрыт план подготовки украинских подростков к конфликту с Россией",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/raskryt-plan-podgotovki-ukrainskih-podrostkov-k-konfliktu-s-rossiey/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Ракета «Союз-5» получила процессор «Эльбрус»",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/raketa-soyuz-5-poluchila-protsessor-elbrus/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Медведев обыграл Сафиуллина и вышел в финал в Ханчжоу",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/medvedev-obygral-safiullina-i-vyshel-v-final-v-hanchzhou/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Семененко возглавил список запасных на этапы Гран-при ISU",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/semenenko-vozglavil-spisok-zapasnyh-na-etapy-gran-pri-isu/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Токсанбаеву лишили золота Азиатских игр из-за обуви",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/toksanbaevu-lishili-zolota-aziatskih-igr-iz-za-obuvi/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
    "title": "Появились кадры первых секунд после взрыва на российском заводе",
    "summary": "",
    "url": "https://lenta.ru/news/2026/09/28/poyavilis-kadry-pervyh-sekund-posle-vzryva-na-rossiyskom-zavode/",
@@ -139,76 +209,6 @@
    "title": "Оскорбленный Тимати глава ФПБК потребовал публичных извинений",
    "summary": "",
    "url": "https://lenta.ru/news/2026/09/28/oskorblennyy-timati-glava-fpbk-potreboval-publichnyh-izvineniy/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Назван способ борьбы с мировым голодом",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/nazvan-sposob-borby-s-mirovym-golodom/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "В ближневосточной стране объявили всеобщую мобилизацию",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/v-blizhnevostochnoy-strane-ob-yavili-vseobschuyu-mobilizatsiyu/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "14-летний мальчик не выжил во время полета на самолете",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/145-kilogrammovyy-malchik-ne-vyzhil-na-bortu-amerikanskogo-samoleta/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Путин установил штатную численность Вооруженных сил России",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/putin-ustanovil-shtatnuyu-chislennost-vooruzhennyh-sil-rossii/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Банда похитила на браках с бойцами СВО 35 миллионов рублей",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/na-brakah-s-boytsami-svo-pohitili-35-millionov-rubley/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Ряд российских регионов предупредили о заморозках",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/ryad-rossiyskih-regionov-predupredili-o-zamorozkah/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Певица Ханна опубликовала видео в прозрачном наряде на индийской свадьбе",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/pevitsa-hanna-opublikovala-video-v-prozrachnom-naryade-na-indiyskoy-svadbe/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Кологривый сыграет в новых «Папиных дочках»",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/kologrivyy-sygraet-v-novyh-papinyh-dochkah/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Вулкан в Индонезии засиял редким ярко-синим пламенем",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/vulkan-v-indonezii-zasiyal-redkim-yarko-sinim-plamenem/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Осьминог присосался к лицу рыбака и попал на видео",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/osminog-prisosalsya-k-litsu-rybaka-i-popal-na-video/",
    "source": "Лента.ру"
   }
  ],
