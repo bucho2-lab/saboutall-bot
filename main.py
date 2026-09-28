@@ -11,7 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from bot.render import render
@@ -23,6 +23,7 @@ HISTORY = ROOT / "data/history.json"
 CANDIDATES = ROOT / "data/candidates.json"
 QUEUE = ROOT / "data/queue"
 OUTPUT = ROOT / "output"
+MSK = timezone(timedelta(hours=3))
 
 SAMPLE = [
     Item("news", "Астрономы нашли планету, у которой год длится меньше суток",
@@ -42,6 +43,7 @@ def load_history() -> list[dict]:
 
 def next_from_queue(seen: set) -> tuple[Path, dict] | None:
     """Самый старый готовый пост из data/queue/, который ещё не публиковался."""
+    today = datetime.now(MSK).date().isoformat()
     for path in sorted(QUEUE.glob("*.json")):
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
@@ -50,6 +52,14 @@ def next_from_queue(seen: set) -> tuple[Path, dict] | None:
             continue
         if data.get("url") in seen:
             path.unlink()
+            continue
+        # посты «В этот день» с полем date выходят только в свой день (по Москве)
+        day = data.get("date")
+        if day and day < today:
+            print(f"[queue] {path.name}: дата {day} прошла, убираю")
+            path.unlink()
+            continue
+        if day and day > today:
             continue
         return path, data
     return None
