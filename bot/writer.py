@@ -71,15 +71,17 @@ def _write_with_claude(items: list[Item]) -> tuple[Post, Item]:
 
 
 def _write_fallback(items: list[Item]) -> tuple[Post, Item]:
-    it = items[0]
+    # без модели берём первый материал, у которого есть описание: иначе картинка будет из одного заголовка
+    idx = next((i for i, x in enumerate(items) if len(x.summary) > 60), 0)
+    it = items[idx]
     title = it.title if len(it.title) <= 90 else it.title[:87].rstrip() + "…"
     body = it.summary[:217].rstrip() + ("…" if len(it.summary) > 217 else "")
     post = Post(
-        chosen_index=0,
+        chosen_index=idx,
         category="ИСТОРИЯ" if it.kind == "fact" else "НОВОСТИ",
         title=title,
         body=body,
-        caption=f"{it.title}\n\n{it.summary[:800]}\n\nА вы знали об этом?",
+        caption="\n\n".join(x for x in (it.title, it.summary[:800], "А вы знали об этом?") if x),
         hashtags=["факты", "интересныефакты", "новости", "знаниясила", "этоинтересно"],
     )
     return post, it
