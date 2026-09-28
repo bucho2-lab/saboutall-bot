@@ -79,7 +79,12 @@ def _write_with_github_models(items: list[Item]) -> tuple[Post, Item]:
     )
     if resp.status_code >= 400:
         raise RuntimeError(f"{resp.status_code} {resp.text[:300]}")
-    post = Post.model_validate_json(resp.json()["choices"][0]["message"]["content"])
+    try:
+        content = resp.json()["choices"][0]["message"]["content"] or ""
+        # модель иногда оборачивает JSON в ```json ... ```
+        post = Post.model_validate_json(content[content.find("{"):content.rfind("}") + 1])
+    except Exception as e:
+        raise RuntimeError(f"не разобрал ответ ({e}): {resp.status_code} {resp.text[:500]}")
     idx = post.chosen_index if 0 <= post.chosen_index < len(items) else 0
     return post, items[idx]
 

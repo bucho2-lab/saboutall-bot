@@ -77,8 +77,9 @@ def fetch_facts(count: int = 12) -> list[Item]:
         return []
     items: list[Item] = []
     for ev in events[:count]:
-        pages = ev.get("pages") or [{}]
-        page = pages[0]
+        # первая страница часто статья про сам год: берём первую тематическую
+        pages = [pg for pg in ev.get("pages") or [] if not pg.get("title", "").split("_")[0].isdigit()]
+        page = pages[0] if pages else {}
         extract = _clean(page.get("extract", ""))
         items.append(Item(
             kind="fact",
