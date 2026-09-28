@@ -62,51 +62,36 @@ def _write_with_github_models(items: list[Item]) -> tuple[Post, Item]:
     import requests
 
     schema = json.dumps(Post.model_json_schema(), ensure_ascii=False)
-    resp = requests.post(
-        "https://models.github.ai/inference/chat/completions",
-        headers={"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
-                 "Accept": "application/vnd.github+json", "Content-Type": "application/json"},
-        json={
-            "model": os.getenv("GH_MODEL", "openai/gpt-4.1-mini"),
-            "messages": [
-                {"role": "system", "content": SYSTEM + "\n\nОтветь только JSON-объектом по схеме:\n" + schema},
-                {"role": "user", "content": "Кандидаты:\n\n" + _format_candidates(items)},
-            ],
-            "response_format": {"type": "json_object"},
-            "temperature": 0.7,
-        },
-        timeout=120,
-    )
-    if resp.status_code >= 400:
-        raise RuntimeError(f"{resp.status_code} {resp.text[:300]}")
-    try:
-        content = resp.json()["choices"][0]["message"]["content"] or ""
-        # модель иногда оборачивает JSON в ```json ... ```
-        post = Post.model_validate_json(content[content.find("{"):content.rfind("}") + 1])
-    except Exception as e:
-        raise RuntimeError(f"не разобрал ответ ({e}): {resp.status_code} {resp.text[:500]}")
-    idx = post.chosen_index if 0 <= post.chosen_index < len(items) else 0
-    return post, items[idx]
-
-
-def _write_with_claude(items: list[Item]) -> tuple[Post, Item]:
-    import anthropic
-
-    client = anthropic.Anthropic()
-    response = client.messages.parse(
-        model=os.getenv("CLAUDE_MODEL", "claude-opus-5"),
-        max_tokens=16000,
-        thinking={"type": "adaptive"},
-        output_config={"effort": "medium"},
-        system=SYSTEM,
-        messages=[{"role": "user", "content": "Кандидаты:\n\n" + _format_candidates(items)}],
-        output_format=Post,
-    )
-    if response.stop_reason == "refusal" or response.parsed_output is None:
-        raise RuntimeError(f"нет ответа модели (stop_reason={response.stop_reason})")
-    post = response.parsed_output
-    idx = post.chosen_index if 0 <= post.chosen_index < len(items) else 0
-    return post, items[idx]
+    models = [os.getenv("GH_MODEL", "openai/gpt-4.1-mini"), "openai/gpt-4o-mini"]
+    errors = []
+    for model in dict.fromkeys(models):
+        resp = requests.post(
+            "https://models.github.ai/inference/chat/completions",
+            headers={"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
+                     "Accept": "application/json", "Content-Type": "application/json",
+                     "X-GitHub-Api-Version": "2022-11-28"},
+            json={
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": SYSTEM + "\n\nОтветь только JSON-объектом по схеме:\n" + schema},
+                    {"role": "user", "content": "Кандидаты:\n\n" + _format_candidates(items)},
+                ],
+                "temperature": 0.7,
+                "stream": False,
+            },
+            timeout=120,
+        )
+        try:
+            content = resp.json()["choices"][0]["message"]["content"] or ""
+            # модель иногда оборачивает JSON в ```json ... ```
+            post = Post.model_validate_json(content[content.find("{"):content.rfind("}") + 1])
+        except Exception as e:
+            errors.append(f"{model}: {resp.status_code} {resp.headers.get('content-type')} "
+                          f"len={len(resp.content)} {resp.text[:300]!r} ({e})")
+            continue
+        idx = post.chosen_index if 0 <= post.chosen_index < len(items) else 0
+        return post, items[idx]
+    raise RuntimeError("; ".join(errors))
 
 
 def _write_fallback(items: list[Item]) -> tuple[Post, Item]:
