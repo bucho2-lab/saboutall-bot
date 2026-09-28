@@ -9,6 +9,10 @@ on:
       kind:
         description: "auto, news или fact"
         default: "auto"
+      publish:
+        description: "Опубликовать в Instagram этот запуск"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -42,7 +46,7 @@ jobs:
           GITHUB_BRANCH: ${{ github.ref_name }}
           CHANNEL_HANDLE: ${{ vars.CHANNEL_HANDLE }}
           # пока переменная PUBLISH не равна true, бот только готовит посты
-          PUBLISH: ${{ vars.PUBLISH || 'false' }}
+          PUBLISH: ${{ inputs.publish && 'true' || vars.PUBLISH || 'false' }}
         run: python main.py --kind "${{ inputs.kind || 'auto' }}"
       - name: Сохранить картинку для просмотра
         uses: actions/upload-artifact@v4
