@@ -69,6 +69,13 @@ def publish_reel(video_url: str, caption: str) -> str:
                      "share_to_feed": "true"}, tries=60, pause=10)
 
 
+def publish_story(image_url: str | None = None, video_url: str | None = None) -> str:
+    """Сторис из картинки или видео. Ссылки и стикеры API не поддерживает."""
+    if video_url:
+        return _publish({"media_type": "STORIES", "video_url": video_url}, tries=60, pause=10)
+    return _publish({"media_type": "STORIES", "image_url": image_url}, tries=30, pause=4)
+
+
 def refresh_instagram_token(token: str) -> str:
     """Продлевает токен «входа через Instagram» ещё на 60 дней (токен должен быть старше суток)."""
     return _check(requests.get(

@@ -70,6 +70,24 @@ def next_from_queue(seen: set, fmt: str = "photo") -> tuple[Path, dict] | None:
     return fallback
 
 
+def post_story(category: str, media_path: Path, media_url: str, handle: str) -> str | None:
+    """Сторис к посту: ролик целиком или картинка поста в формате 9:16. Сбой сторис не отменяет пост."""
+    from bot.hosting import upload
+    from bot.instagram import publish_story
+    from bot.render import render_story
+    try:
+        if media_path.suffix == ".mp4":
+            story_id = publish_story(video_url=media_url)
+        else:
+            story = render_story(category, media_path, handle, media_path.with_name(media_path.stem + "-story.jpg"))
+            story_id = publish_story(image_url=upload(story))
+        print(f"Сторис: {story_id}")
+        return story_id
+    except Exception as e:
+        print(f"[story] не получилось: {e}")
+        return None
+
+
 def pick_kind(requested: str, history: list[dict]) -> str:
     if requested != "auto":
         return requested
@@ -139,7 +157,7 @@ def main() -> None:
     print(f"Файл: {media_path}\n\n{caption}\n")
 
     record = {"time": stamp, "kind": item.kind, "format": args.format, "url": item.url,
-              "source_title": item.title, "title": post.title, "image": media_path.name, "published_id": None}
+              "source_title": item.title, "title": post.title, "category": post.category, "image": media_path.name, "published_id": None}
 
     if publish:
         from bot.hosting import upload
@@ -148,6 +166,8 @@ def main() -> None:
         send = publish_reel if args.format == "reel" else publish_photo
         record["published_id"] = send(media_url, caption)
         print(f"Опубликовано: {record['published_id']}")
+        if os.getenv("STORIES", "true").lower() != "false":
+            record["story_id"] = post_story(post.category, media_path, media_url, handle)
         if queued:
             queued[0].unlink()  # в режиме предпросмотра пост остаётся в очереди
     else:

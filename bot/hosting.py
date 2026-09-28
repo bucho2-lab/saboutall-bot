@@ -48,6 +48,18 @@ def _github(path: Path) -> str:
     raise RuntimeError(f"Файл не появился по адресу {urls[-1]}")
 
 
+def published_url(name: str) -> str:
+    """Ссылка на уже выложенный файл published/<name> (для сторис к старому посту)."""
+    repo = os.environ["GITHUB_REPOSITORY"]
+    remote_path = f"published/{name}"
+    if name.endswith(".mp4"):
+        commits = requests.get(f"https://api.github.com/repos/{repo}/commits",
+                               params={"path": remote_path, "per_page": 1},
+                               headers={"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}"}, timeout=30).json()
+        return f"https://cdn.jsdelivr.net/gh/{repo}@{commits[0]['sha']}/{remote_path}"
+    return f"https://raw.githubusercontent.com/{repo}/{os.getenv('GITHUB_BRANCH', 'main')}/{remote_path}"
+
+
 def _imgbb(path: Path) -> str:
     resp = requests.post(
         "https://api.imgbb.com/1/upload",

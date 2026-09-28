@@ -1,9 +1,9 @@
-"""Рендер картинки 1080×1350 (формат 4:5, лучший охват в ленте Instagram)."""
+"""Рендер картинки 1080×1350 (формат 4:5, лучший охват в ленте Instagram) и сторис 1080×1920 к ней."""
 from __future__ import annotations
 
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 W, H = 1080, 1350
 PAD = 90
@@ -115,4 +115,36 @@ def render(category: str, title: str, body: str, source: str, handle: str, out_p
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(out_path, "JPEG", quality=92)  # Instagram Graph API принимает только JPEG
+    return out_path
+
+
+def render_story(category: str, post_image: Path, handle: str, out_path: Path) -> Path:
+    """Сторис 9:16: картинка поста по центру на размытом фоне из неё же и подпись «Новый пост»."""
+    top, _, accent = PALETTES.get(category.upper(), DEFAULT_PALETTE)
+    SW, SH = 1080, 1920
+    post = Image.open(post_image).convert("RGB")
+    bg = post.resize((int(SH * post.width / post.height), SH)).filter(ImageFilter.GaussianBlur(40))
+    left = (bg.width - SW) // 2
+    story = bg.crop((left, 0, left + SW, SH))
+    story = Image.blend(story, Image.new("RGB", (SW, SH), top), 0.45)
+
+    card_w = 900
+    card = post.resize((card_w, int(post.height * card_w / post.width)), Image.LANCZOS)
+    x, y = (SW - card_w) // 2, (SH - card.height) // 2 + 30
+    mask = Image.new("L", card.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, card.width - 1, card.height - 1), radius=36, fill=255)
+    story.paste(card, (x, y), mask)
+
+    draw = ImageDraw.Draw(story)
+    tag_font = _font("bold", 44)
+    tag = "НОВЫЙ ПОСТ"
+    tw = draw.textlength(tag, font=tag_font)
+    draw.rounded_rectangle(((SW - tw) / 2 - 36, y - 130, (SW + tw) / 2 + 36, y - 44), radius=43, fill=accent)
+    draw.text(((SW - tw) / 2, y - 112), tag, font=tag_font, fill=top)
+    f_font = _font("regular", 40)
+    hint = f"Читайте в профиле {handle}"
+    draw.text(((SW - draw.textlength(hint, font=f_font)) / 2, y + card.height + 50), hint, font=f_font, fill=(245, 245, 250))
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    story.save(out_path, "JPEG", quality=92)
     return out_path
