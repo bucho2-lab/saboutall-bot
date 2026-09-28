@@ -41,9 +41,11 @@ def load_history() -> list[dict]:
     return []
 
 
-def next_from_queue(seen: set) -> tuple[Path, dict] | None:
-    """Самый старый готовый пост из data/queue/, который ещё не публиковался."""
+def next_from_queue(seen: set, fmt: str = "photo") -> tuple[Path, dict] | None:
+    """Самый старый готовый пост из data/queue/, который ещё не публиковался.
+    Посты с format=reel ждут вечернего ролика; для ролика, если такого нет, подойдёт любой пост."""
     today = datetime.now(MSK).date().isoformat()
+    fallback = None
     for path in sorted(QUEUE.glob("*.json")):
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
@@ -61,8 +63,11 @@ def next_from_queue(seen: set) -> tuple[Path, dict] | None:
             continue
         if day and day > today:
             continue
-        return path, data
-    return None
+        if data.get("format", "photo") == fmt:
+            return path, data
+        if fmt == "reel" and fallback is None:
+            fallback = path, data
+    return fallback
 
 
 def pick_kind(requested: str, history: list[dict]) -> str:
@@ -99,7 +104,7 @@ def main() -> None:
             {"updated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
              "news": [c.to_dict() for c in news[:30]], "facts": [c.to_dict() for c in facts[:15]]},
             ensure_ascii=False, indent=1), encoding="utf-8")
-        queued = next_from_queue(seen)
+        queued = next_from_queue(seen, args.format)
         kind = pick_kind(args.kind, history)
         candidates = (news if kind == "news" else facts) or news or facts
     candidates = candidates[:25]
