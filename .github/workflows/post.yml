@@ -51,9 +51,9 @@ jobs:
           GITHUB_BRANCH: ${{ github.ref_name }}
           # аккаунт, куда публикуем; бот сверяет с ним токен и пишет его на картинке
           CHANNEL_HANDLE: "@bucho2"
-          # по расписанию публикует всегда (решение Ивана 28.09.2026); выключить: variable PUBLISH = false
+          # по расписанию публикует всегда (решение Ивана 28.09.2026); выключить: variable PAUSE = true
           # ручной запуск публикует только с галочкой «Опубликовать»
-          PUBLISH: ${{ ((github.event_name == 'schedule' && vars.PUBLISH != 'false') || inputs.publish) && 'true' || 'false' }}
+          PUBLISH: ${{ ((github.event_name == 'schedule' && vars.PAUSE != 'true') || inputs.publish) && 'true' || 'false' }}
           FORMAT: ${{ inputs.format || (github.event.schedule == '0 16 * * *' && 'reel' || 'photo') }}
         run: python main.py --kind "${{ inputs.kind || 'auto' }}" --format "$FORMAT"
       - name: Сохранить картинку для просмотра
