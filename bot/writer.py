@@ -46,8 +46,42 @@ def write_post(items: list[Item]) -> tuple[Post, Item]:
         try:
             return _write_with_claude(items)
         except Exception as e:
-            print(f"[writer] Claude недоступен, собираю пост по шаблону: {e}")
+            print(f"[writer] Claude недоступен: {e}")
+    if os.getenv("GITHUB_TOKEN") and os.getenv("GH_MODEL", "openai/gpt-4.1-mini") != "none":
+        try:
+            return _write_with_github_models(items)
+        except Exception as e:
+            print(f"[writer] GitHub Models недоступен: {e}")
+    print("[writer] собираю пост по шаблону")
     return _write_fallback(items)
+
+
+def _write_with_github_models(items: list[Item]) -> tuple[Post, Item]:
+    """Бесплатная модель из GitHub Models: в Actions работает по встроенному GITHUB_TOKEN, ключ не нужен."""
+    import json
+    import requests
+
+    schema = json.dumps(Post.model_json_schema(), ensure_ascii=False)
+    resp = requests.post(
+        "https://models.github.ai/inference/chat/completions",
+        headers={"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
+                 "Accept": "application/vnd.github+json", "Content-Type": "application/json"},
+        json={
+            "model": os.getenv("GH_MODEL", "openai/gpt-4.1-mini"),
+            "messages": [
+                {"role": "system", "content": SYSTEM + "\n\nОтветь только JSON-объектом по схеме:\n" + schema},
+                {"role": "user", "content": "Кандидаты:\n\n" + _format_candidates(items)},
+            ],
+            "response_format": {"type": "json_object"},
+            "temperature": 0.7,
+        },
+        timeout=120,
+    )
+    if resp.status_code >= 400:
+        raise RuntimeError(f"{resp.status_code} {resp.text[:300]}")
+    post = Post.model_validate_json(resp.json()["choices"][0]["message"]["content"])
+    idx = post.chosen_index if 0 <= post.chosen_index < len(items) else 0
+    return post, items[idx]
 
 
 def _write_with_claude(items: list[Item]) -> tuple[Post, Item]:

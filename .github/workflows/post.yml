@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  models: read
 
 concurrency: instagram-post
 
@@ -34,6 +35,8 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL || 'claude-opus-5' }}
+          # бесплатная модель GitHub, работает без ключей; none отключает
+          GH_MODEL: ${{ vars.GH_MODEL || 'openai/gpt-4.1-mini' }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IMAGE_HOST: ${{ vars.IMAGE_HOST || 'github' }}
