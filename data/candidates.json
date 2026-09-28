@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-28T14:34+00:00",
+ "updated": "2026-09-28T14:36+00:00",
  "news": [
   {
    "kind": "news",
@@ -129,6 +129,13 @@
   },
   {
    "kind": "news",
+   "title": "Психиатр предупредил об опасности вернувшегося в моду тренда на экстремальную худобу",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/psihiatr-predupredil-ob-opasnosti-vernuvshegosya-v-modu-trenda-na-ekstremalnuyu-hudobu/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
    "title": "На Украине задумались о возможном ударе по офису Зеленского",
    "summary": "",
    "url": "https://lenta.ru/news/2026/09/28/na-ukraine-zadumalis-o-vozmozhnom-udare-po-ofisu-zelenskogo/",
@@ -202,13 +209,6 @@
    "title": "Привычная ягода оказалась способна замедлить старение кожи",
    "summary": "",
    "url": "https://lenta.ru/news/2026/09/28/privychnaya-yagoda-okazalas-sposobna-zamedlit-starenie-kozhi/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "На Украине высказались о перспективах перемирия на Черном море",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/na-ukraine-vyskazalis-o-perspektivah-peremiriya-na-chernom-more/",
    "source": "Лента.ру"
   }
  ],
