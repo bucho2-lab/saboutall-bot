@@ -1,6 +1,20 @@
 {
- "updated": "2026-09-28T14:40+00:00",
+ "updated": "2026-09-28T17:05+00:00",
  "news": [
+  {
+   "kind": "news",
+   "title": "Бессонницу связали с повышенным риском инсульта",
+   "summary": "Бессонницу связали с повышенным риском инсульта",
+   "url": "https://nplus1.ru/news/2026/09/28/insomnia-risk-factor",
+   "source": "N+1"
+  },
+  {
+   "kind": "news",
+   "title": "Достойные Нобеля",
+   "summary": "Каждый год в начале октября становятся известны имена очередных обладателей Нобелевской премии. А примерно за две недели до этого компания Clarivate публикует списки «лауреатов по цитируемости» — самых выдающихся и влиятельных ученых из четырех областей: физиологии и медицины, физики, химии и экономики. В этом году лауреаты по цитируемости стали известны 17 сентября. Давайте познакомимся с ними и с их работами поближе.",
+   "url": "https://nplus1.ru/blog/2026/09/28/clarivate-2026",
+   "source": "N+1"
+  },
   {
    "kind": "news",
    "title": "Метирапон улучшил сон и облегчил депрессию при синдроме автономной секреции кортизола",
@@ -59,17 +73,10 @@
   },
   {
    "kind": "news",
-   "title": "Частота колоректального рака после аппендицита оказалась ниже при аппендэктомии",
-   "summary": "Частота колоректального рака после аппендицита оказалась ниже при аппендэктомии",
-   "url": "https://nplus1.ru/news/2026/09/28/in-favor-of-surgery",
-   "source": "N+1"
-  },
-  {
-   "kind": "news",
-   "title": "Древнейший сапиенс обрел лицо",
-   "summary": "Бразилец Сисеро Мораис (Cicero Moraes) вместе с коллегами представил цифровую реконструкцию внешности архаического человека из местонахождения Джебель-Ирхуд. Они использовали фотографии и видеоматериалы, связанные с останками из этого памятника, с помощью которых они построили трехмерную модель черепа Irhoud-1, недостающие части которого исследователи восполнили за счет других окаменелостей из той же пещеры. Затем специалисты воссоздали облик гоминина, причем научную реконструкцию они выполнили в серых тонах, избегая деталей внешнего вида, о которых достоверно неизвестно. Но также авторы новой статьи, опубликованной в журнале Heritage, выложили и художественную реконструкцию образа человека, дополненную предположениями о его цвете кожи, глаз и волос, а также прическе и бороде.",
-   "url": "https://nplus1.ru/news/2026/09/28/facial-approximation-of-jebel-irhoud",
-   "source": "N+1"
+   "title": "В Сибири нашли древнейшее свидетельство обитания соболя в арктической зоне",
+   "summary": "На берегу бассейна реки Индигирки в Якутии обнаружили почти целый череп соболя, который 47 тысяч лет пролежал в мерзлоте. Эта находка помогла ученым восстановить, какой была природа северо-востока Сибири в период, когда климат позволял местным животным заходить далеко за пределы их нынешнего ареала.",
+   "url": "https://naked-science.ru/article/paleontology/sobol-v-arkticheskoj-zone",
+   "source": "Naked Science"
   },
   {
    "kind": "news",
@@ -108,13 +115,6 @@
   },
   {
    "kind": "news",
-   "title": "Ученые выяснили, почему земные сутки колеблются на миллисекунды",
-   "summary": "Длительность суток на Земле никогда не бывает абсолютно одинаковой и изменяется на несколько миллисекунд в масштабе десятилетий. Канадские физики изучили физический механизм, который заставляет нашу планету то слегка ускорять, то замедлять свое вращение.",
-   "url": "https://naked-science.ru/article/geology/sutki-ne-postoyanni",
-   "source": "Naked Science"
-  },
-  {
-   "kind": "news",
    "title": "Люди не одобрили отказ от сотрудничества даже с человеком с плохой репутацией",
    "summary": "Человек — социальное существо, и личные взаимодействия часто не подчиняются законам формальной логики, общего блага или экономической целесообразности. Репутация человека, сложившееся о нем мнение общества, должна сильно влиять на желание действовать с ним сообща, но оказалось, что плохая репутация — не приговор.",
    "url": "https://naked-science.ru/article/psy/bad-reputation-all-right",
@@ -129,86 +129,86 @@
   },
   {
    "kind": "news",
-   "title": "Военкор оценил значение боев за Орехов",
+   "title": "Появились кадры первых секунд после взрыва на российском заводе",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/voenkor-otsenil-znachenie-boev-za-orehov/",
+   "url": "https://lenta.ru/news/2026/09/28/poyavilis-kadry-pervyh-sekund-posle-vzryva-na-rossiyskom-zavode/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Учительница и ученик захлебнулись в водохранилище при загадочных обстоятельствах",
+   "title": "Оскорбленный Тимати глава ФПБК потребовал публичных извинений",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/uchitelnitsa-i-uchenik-zahlebnulis-v-vodohranilische-pri-zagadochnyh-obstoyatelstvah/",
+   "url": "https://lenta.ru/news/2026/09/28/oskorblennyy-timati-glava-fpbk-potreboval-publichnyh-izvineniy/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Психиатр предупредил об опасности вернувшегося в моду тренда на экстремальную худобу",
+   "title": "Назван способ борьбы с мировым голодом",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/psihiatr-predupredil-ob-opasnosti-vernuvshegosya-v-modu-trenda-na-ekstremalnuyu-hudobu/",
+   "url": "https://lenta.ru/news/2026/09/28/nazvan-sposob-borby-s-mirovym-golodom/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "На Украине задумались о возможном ударе по офису Зеленского",
+   "title": "В ближневосточной стране объявили всеобщую мобилизацию",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/na-ukraine-zadumalis-o-vozmozhnom-udare-po-ofisu-zelenskogo/",
+   "url": "https://lenta.ru/news/2026/09/28/v-blizhnevostochnoy-strane-ob-yavili-vseobschuyu-mobilizatsiyu/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Найден секретный способ очистить Windows от мусора",
+   "title": "14-летний мальчик не выжил во время полета на самолете",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/clean/",
+   "url": "https://lenta.ru/news/2026/09/28/145-kilogrammovyy-malchik-ne-vyzhil-na-bortu-amerikanskogo-samoleta/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Путин разрешил продать «дочку» Western Union",
+   "title": "Путин установил штатную численность Вооруженных сил России",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/putin-razreshil-prodat-dochku-western-union/",
+   "url": "https://lenta.ru/news/2026/09/28/putin-ustanovil-shtatnuyu-chislennost-vooruzhennyh-sil-rossii/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Доходность американского госдолга выросла из-за скачка цен на нефть",
+   "title": "Банда похитила на браках с бойцами СВО 35 миллионов рублей",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/dohodnost-amerikanskogo-gosdolga-vyrosla-iz-za-skachka-tsen-na-neft/",
+   "url": "https://lenta.ru/news/2026/09/28/na-brakah-s-boytsami-svo-pohitili-35-millionov-rubley/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Стилист назвала россиянам сохраняющую здоровье суставов спортивную обувь",
+   "title": "Ряд российских регионов предупредили о заморозках",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/stilist-nazvala-rossiyanam-sohranyayuschuyu-zdorovie-sustavov-sportivnuyu-obuv/",
+   "url": "https://lenta.ru/news/2026/09/28/ryad-rossiyskih-regionov-predupredili-o-zamorozkah/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Гигантские кости размером с человека неожиданно нашли в России",
+   "title": "Певица Ханна опубликовала видео в прозрачном наряде на индийской свадьбе",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/gigantskie-kosti-razmerom-s-cheloveka-neozhidanno-nashli-v-rossii/",
+   "url": "https://lenta.ru/news/2026/09/28/pevitsa-hanna-opublikovala-video-v-prozrachnom-naryade-na-indiyskoy-svadbe/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Популярная юмористка с ТНТ зареклась работать с мужем и назвала причину",
+   "title": "Кологривый сыграет в новых «Папиных дочках»",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/saule/",
+   "url": "https://lenta.ru/news/2026/09/28/kologrivyy-sygraet-v-novyh-papinyh-dochkah/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "В Венгрии назвали последствия дела о краже против Мадьяра",
+   "title": "Вулкан в Индонезии засиял редким ярко-синим пламенем",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/v-vengrii-nazvali-posledstviya-dela-protiv-madyara/",
+   "url": "https://lenta.ru/news/2026/09/28/vulkan-v-indonezii-zasiyal-redkim-yarko-sinim-plamenem/",
    "source": "Лента.ру"
   },
   {
    "kind": "news",
-   "title": "Названы обреченные на исчезновение профессии в швейной индустрии",
+   "title": "Осьминог присосался к лицу рыбака и попал на видео",
    "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/nazvany-obrechennye-na-ischeznovenie-professii-v-shveynoy-industrii/",
+   "url": "https://lenta.ru/news/2026/09/28/osminog-prisosalsya-k-litsu-rybaka-i-popal-na-video/",
    "source": "Лента.ру"
   }
  ],
