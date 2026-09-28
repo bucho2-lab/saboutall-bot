@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-28T14:36+00:00",
+ "updated": "2026-09-28T14:40+00:00",
  "news": [
   {
    "kind": "news",
@@ -129,6 +129,20 @@
   },
   {
    "kind": "news",
+   "title": "Военкор оценил значение боев за Орехов",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/voenkor-otsenil-znachenie-boev-za-orehov/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
+   "title": "Учительница и ученик захлебнулись в водохранилище при загадочных обстоятельствах",
+   "summary": "",
+   "url": "https://lenta.ru/news/2026/09/28/uchitelnitsa-i-uchenik-zahlebnulis-v-vodohranilische-pri-zagadochnyh-obstoyatelstvah/",
+   "source": "Лента.ру"
+  },
+  {
+   "kind": "news",
    "title": "Психиатр предупредил об опасности вернувшегося в моду тренда на экстремальную худобу",
    "summary": "",
    "url": "https://lenta.ru/news/2026/09/28/psihiatr-predupredil-ob-opasnosti-vernuvshegosya-v-modu-trenda-na-ekstremalnuyu-hudobu/",
@@ -195,20 +209,6 @@
    "title": "Названы обреченные на исчезновение профессии в швейной индустрии",
    "summary": "",
    "url": "https://lenta.ru/news/2026/09/28/nazvany-obrechennye-na-ischeznovenie-professii-v-shveynoy-industrii/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Бензин в стране Евросоюза подорожал до нового рекорда",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/benzin-v-strane-evrosoyuza-podorozhal-do-novogo-rekorda/",
-   "source": "Лента.ру"
-  },
-  {
-   "kind": "news",
-   "title": "Привычная ягода оказалась способна замедлить старение кожи",
-   "summary": "",
-   "url": "https://lenta.ru/news/2026/09/28/privychnaya-yagoda-okazalas-sposobna-zamedlit-starenie-kozhi/",
    "source": "Лента.ру"
   }
  ],
