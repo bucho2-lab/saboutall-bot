@@ -31,7 +31,12 @@ def _own_user_id(token: str) -> str:
 def publish_photo(image_url: str, caption: str) -> str:
     """Два шага: создать контейнер с картинкой, дождаться обработки, опубликовать. Возвращает id поста."""
     token = os.environ["IG_ACCESS_TOKEN"]
-    ig_user = os.getenv("IG_USER_ID") or _own_user_id(token)
+    # защита от публикации не в тот аккаунт: токен должен принадлежать каналу из CHANNEL_HANDLE
+    me = _check(requests.get(f"{_base()}/me", params={"fields": "user_id,username", "access_token": token}, timeout=30))
+    expected = os.getenv("CHANNEL_HANDLE", "").lstrip("@").lower()
+    if expected and me.get("username", "").lower() != expected:
+        raise RuntimeError(f"Токен от аккаунта @{me.get('username')}, а канал @{expected}. Публикация отменена.")
+    ig_user = os.getenv("IG_USER_ID") or str(me.get("user_id") or me["id"])
 
     container = _check(requests.post(
         f"{_base()}/{ig_user}/media",
