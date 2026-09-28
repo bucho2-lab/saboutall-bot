@@ -1,0 +1,57 @@
+name: Instagram post
+
+on:
+  schedule:
+    # время в UTC: 06:00, 11:00, 16:00 UTC = 09:00, 14:00, 19:00 по Москве
+    - cron: "0 6,11,16 * * *"
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "auto, news или fact"
+        default: "auto"
+
+permissions:
+  contents: write
+
+concurrency: instagram-post
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Шрифт Montserrat
+        run: |
+          curl -sSLo fonts/Montserrat-Bold.ttf https://github.com/JulietaUla/Montserrat/raw/master/fonts/ttf/Montserrat-Bold.ttf
+          curl -sSLo fonts/Montserrat-Medium.ttf https://github.com/JulietaUla/Montserrat/raw/master/fonts/ttf/Montserrat-Medium.ttf
+      - name: Пост
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL || 'claude-opus-5' }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IMAGE_HOST: ${{ vars.IMAGE_HOST || 'github' }}
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_BRANCH: ${{ github.ref_name }}
+          CHANNEL_HANDLE: ${{ vars.CHANNEL_HANDLE }}
+          # пока переменная PUBLISH не равна true, бот только готовит посты
+          PUBLISH: ${{ vars.PUBLISH || 'false' }}
+        run: python main.py --kind "${{ inputs.kind || 'auto' }}"
+      - name: Сохранить картинку для просмотра
+        uses: actions/upload-artifact@v4
+        with:
+          name: post
+          path: output/
+      - name: Сохранить историю постов
+        run: |
+          git config user.name "instagram-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/history.json
+          git commit -m "history update" || echo "нет изменений"
+          git pull --rebase
+          git push

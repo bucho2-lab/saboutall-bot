@@ -1,0 +1,10 @@
+{
+  "rss": [
+    {"name": "N+1", "url": "https://nplus1.ru/rss"},
+    {"name": "Naked Science", "url": "https://naked-science.ru/feed"},
+    {"name": "Лента.ру", "url": "https://lenta.ru/rss/news"},
+    {"name": "РИА Новости", "url": "https://ria.ru/export/rss2/archive/index.xml"}
+  ],
+  "max_items_per_feed": 15,
+  "max_age_hours": 36
+}
