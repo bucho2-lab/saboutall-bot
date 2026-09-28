@@ -70,7 +70,9 @@ def main() -> None:
     publish = args.publish or os.getenv("PUBLISH", "false").lower() == "true"
 
     history = load_history()
-    seen = {h["url"] for h in history} | {h["source_title"] for h in history}
+    # повторы отсекаем только по реально опубликованным постам, пробные прогоны не в счёт
+    published = [h for h in history if h.get("published_id")]
+    seen = {h["url"] for h in published} | {h["source_title"] for h in published}
 
     queued = None
     if args.sample:
