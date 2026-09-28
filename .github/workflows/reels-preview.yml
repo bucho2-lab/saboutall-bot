@@ -1,0 +1,33 @@
+name: Reels preview
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: instagram-post
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Шрифт Montserrat
+        run: |
+          mkdir -p fonts
+          curl -fsSLo fonts/Montserrat-Bold.ttf https://github.com/JulietaUla/Montserrat/raw/master/fonts/ttf/Montserrat-Bold.ttf || rm -f fonts/Montserrat-Bold.ttf
+          curl -fsSLo fonts/Montserrat-Medium.ttf https://github.com/JulietaUla/Montserrat/raw/master/fonts/ttf/Montserrat-Medium.ttf || rm -f fonts/Montserrat-Medium.ttf
+      - run: python reels_preview.py
+      - name: Сохранить ролик в репозиторий
+        run: |
+          git config user.name "instagram-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add previews
+          git commit -m "Пробный ролик" || echo "нет изменений"
+          git pull --rebase
+          git push

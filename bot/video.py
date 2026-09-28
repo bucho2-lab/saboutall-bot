@@ -35,6 +35,47 @@ def _background(top, bottom) -> Image.Image:
     return Image.composite(Image.new("RGB", (W, tall), bottom), Image.new("RGB", (W, tall), top), grad)
 
 
+def _cover(img: Image.Image, w: int, h: int) -> Image.Image:
+    img = img.convert("RGB")
+    scale = max(w / img.width, h / img.height)
+    img = img.resize((int(img.width * scale) + 1, int(img.height * scale) + 1), Image.LANCZOS)
+    left, top = (img.width - w) // 2, (img.height - h) // 2
+    return img.crop((left, top, left + w, top + h))
+
+
+def _photo_background(photos, top, duration):
+    """Слайд-шоу фото с плавным наездом и затемнением, чтобы текст читался."""
+    big = [_cover(Image.open(p), int(W * 1.15), int(H * 1.15)) for p in photos]
+    shade = Image.new("RGBA", (W, H))
+    sd = ImageDraw.Draw(shade)
+    for y in range(H):
+        a = int(60 + 140 * (y / H))  # сверху фото видно лучше, к тексту и подвалу темнее
+        sd.line((0, y, W, y), fill=top + (a,))
+    seg = duration / len(big)
+    fade = 0.6
+
+    def frame_at(t: float) -> Image.Image:
+        k = min(int(t / seg), len(big) - 1)
+
+        def shot(i, tt):
+            src = big[i]
+            z = 1.0 + 0.12 * (tt / seg)  # наезд
+            cw, ch = int(src.width / z), int(src.height / z)
+            dx = (src.width - cw) * (0.5 + 0.3 * math.sin(i + tt * 0.3))
+            dy = (src.height - ch) * 0.5
+            return src.crop((int(dx), int(dy), int(dx) + cw, int(dy) + ch)).resize((W, H), Image.BILINEAR)
+
+        local = t - k * seg
+        frame = shot(k, local)
+        if k + 1 < len(big) and local > seg - fade:
+            frame = Image.blend(frame, shot(k + 1, local - seg), (local - (seg - fade)) / fade)
+        frame = frame.convert("RGBA")
+        frame.alpha_composite(shade)
+        return frame
+
+    return frame_at
+
+
 def _text_layer(lines, font, size, spacing, color) -> list[Image.Image]:
     out = []
     for line in lines:
@@ -45,9 +86,11 @@ def _text_layer(lines, font, size, spacing, color) -> list[Image.Image]:
 
 
 def render_video(category: str, title: str, body: str, source: str, handle: str,
-                 out_path: Path, duration: float = 12.0) -> Path:
+                 out_path: Path, duration: float = 12.0, photos=None) -> Path:
+    """photos: список Photo из bot.media; без них фон будет градиентом."""
     top, bottom, accent = PALETTES.get(category.upper(), DEFAULT_PALETTE)
     bg = _background(top, bottom)
+    photo_bg = _photo_background([ph.path for ph in photos], top, duration) if photos else None
     probe = ImageDraw.Draw(Image.new("RGB", (W, H)))
     max_w = W - 2 * PAD
 
@@ -70,6 +113,15 @@ def render_video(category: str, title: str, body: str, source: str, handle: str,
     fd.text((PAD, 0), handle, font=f_font, fill=accent)
     src = f"Источник: {source}"
     fd.text((W - PAD - fd.textlength(src, font=f_font), 0), src, font=f_font, fill=(190, 190, 205))
+    credit = None
+    if photos:
+        c_font = _font("regular", 24)
+        text = "Фото: " + "; ".join(dict.fromkeys(ph.credit for ph in photos))
+        credit = Image.new("RGBA", (W, 40), (0, 0, 0, 0))
+        cd = ImageDraw.Draw(credit)
+        while cd.textlength(text, font=c_font) > W - 2 * PAD and len(text) > 20:
+            text = text[:-2]
+        cd.text((PAD, 0), text, font=c_font, fill=(200, 200, 210))
 
     # вертикальная компоновка: блок текста по центру кадра
     title_h = len(t_lines) * int(t_size * 1.18)
@@ -96,14 +148,20 @@ def render_video(category: str, title: str, body: str, source: str, handle: str,
     for i in range(frames):
         t = i / FPS
         # фон медленно сползает, декоративный круг плавает
-        shift = int(600 * t / duration)
-        frame = bg.crop((0, shift, W, shift + H)).convert("RGBA")
-        d = ImageDraw.Draw(frame)
-        cx = W - 60 + 40 * math.sin(t * 0.6)
-        cy = 180 + 30 * math.cos(t * 0.5)
-        d.ellipse((cx - 300, cy - 300, cx + 300, cy + 300), outline=accent, width=6)
-        d.ellipse((80 + 20 * math.cos(t * 0.4) - 160, H + 40 - 160, 80 + 20 * math.cos(t * 0.4) + 160, H + 40 + 160),
-                  outline=accent + (90,), width=3)
+        if photo_bg:
+            frame = photo_bg(t)
+            d = ImageDraw.Draw(frame)
+        else:
+            shift = int(600 * t / duration)
+            frame = bg.crop((0, shift, W, shift + H)).convert("RGBA")
+            d = ImageDraw.Draw(frame)
+            cx = W - 60 + 40 * math.sin(t * 0.6)
+            cy = 180 + 30 * math.cos(t * 0.5)
+            d.ellipse((cx - 300, cy - 300, cx + 300, cy + 300), outline=accent, width=6)
+            d.ellipse((80 + 20 * math.cos(t * 0.4) - 160, H + 40 - 160, 80 + 20 * math.cos(t * 0.4) + 160, H + 40 + 160),
+                      outline=accent + (90,), width=3)
+        if credit:
+            frame.alpha_composite(credit, (0, H - PAD - 50))
 
         # полоса прогресса сверху, как в сторис
         d.rectangle((0, 0, int(W * t / duration), 8), fill=accent)
