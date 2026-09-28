@@ -2,13 +2,18 @@ name: Instagram post
 
 on:
   schedule:
-    # время в UTC: 06:00, 11:00, 16:00 UTC = 09:00, 14:00, 19:00 по Москве
-    - cron: "0 6,11,16 * * *"
+    # время в UTC: 06:00 и 11:00 UTC = 09:00 и 14:00 по Москве, картинка
+    - cron: "0 6,11 * * *"
+    # 16:00 UTC = 19:00 по Москве, ролик Reels
+    - cron: "0 16 * * *"
   workflow_dispatch:
     inputs:
       kind:
         description: "auto, news или fact"
         default: "auto"
+      format:
+        description: "photo (картинка) или reel (ролик)"
+        default: "photo"
       publish:
         description: "Опубликовать в Instagram этот запуск"
         type: boolean
@@ -48,7 +53,8 @@ jobs:
           CHANNEL_HANDLE: "@bucho2"
           # пока переменная PUBLISH не равна true, бот только готовит посты
           PUBLISH: ${{ inputs.publish && 'true' || vars.PUBLISH || 'false' }}
-        run: python main.py --kind "${{ inputs.kind || 'auto' }}"
+          FORMAT: ${{ inputs.format || (github.event.schedule == '0 16 * * *' && 'reel' || 'photo') }}
+        run: python main.py --kind "${{ inputs.kind || 'auto' }}" --format "$FORMAT"
       - name: Сохранить картинку для просмотра
         uses: actions/upload-artifact@v4
         with:

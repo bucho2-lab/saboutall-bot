@@ -116,7 +116,7 @@ def render_video(category: str, title: str, body: str, source: str, handle: str,
     credit = None
     if photos:
         c_font = _font("regular", 24)
-        text = "Фото: " + "; ".join(dict.fromkeys(ph.credit for ph in photos))
+        text = "Фото: Wikimedia Commons, авторы в описании"
         credit = Image.new("RGBA", (W, 40), (0, 0, 0, 0))
         cd = ImageDraw.Draw(credit)
         while cd.textlength(text, font=c_font) > W - 2 * PAD and len(text) > 20:

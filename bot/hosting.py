@@ -32,13 +32,20 @@ def _github(path: Path) -> str:
         timeout=60,
     )
     resp.raise_for_status()
-    url = f"https://raw.githubusercontent.com/{repo}/{branch}/{remote_path}"
-    # raw.githubusercontent отдаёт новый файл не мгновенно
+    urls = [f"https://raw.githubusercontent.com/{repo}/{branch}/{remote_path}"]
+    if path.suffix == ".mp4":
+        # raw.githubusercontent отдаёт видео как octet-stream, jsDelivr как video/mp4, так надёжнее для Reels
+        sha = resp.json()["commit"]["sha"]
+        urls.insert(0, f"https://cdn.jsdelivr.net/gh/{repo}@{sha}/{remote_path}")
+    # новый файл по ссылке появляется не мгновенно
     for _ in range(12):
-        if requests.head(url, timeout=20).status_code == 200:
-            return url
+        for url in urls:
+            head = requests.head(url, timeout=20, allow_redirects=True)
+            if head.status_code == 200:
+                print(f"[hosting] {url} ({head.headers.get('content-type')})")
+                return url
         time.sleep(5)
-    raise RuntimeError(f"Картинка не появилась по адресу {url}")
+    raise RuntimeError(f"Файл не появился по адресу {urls[-1]}")
 
 
 def _imgbb(path: Path) -> str:

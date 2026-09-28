@@ -4,6 +4,7 @@
     python main.py --publish       # подготовить и опубликовать в Instagram
     python main.py --kind fact     # только факты; --kind news только новости; по умолчанию чередует
     python main.py --sample        # офлайн-проверка на встроенных примерах, без сети
+    python main.py --format reel   # ролик Reels 9:16 на фоне фото по теме вместо картинки
 """
 from __future__ import annotations
 
@@ -66,6 +67,7 @@ def main() -> None:
     ap.add_argument("--kind", choices=["auto", "news", "fact"], default="auto")
     ap.add_argument("--publish", action="store_true")
     ap.add_argument("--sample", action="store_true")
+    ap.add_argument("--format", choices=["photo", "reel"], default="photo")
     args = ap.parse_args()
     publish = args.publish or os.getenv("PUBLISH", "false").lower() == "true"
 
@@ -75,6 +77,7 @@ def main() -> None:
     seen = {h["url"] for h in published} | {h["source_title"] for h in published}
 
     queued = None
+    media_queries: list[str] = []
     if args.sample:
         candidates = SAMPLE
     else:
@@ -95,28 +98,40 @@ def main() -> None:
         path, data = queued
         post = Post(chosen_index=0, **{k: data[k] for k in ("category", "title", "body", "caption", "hashtags")})
         item = Item(data.get("kind", "news"), data.get("source_title", data["title"]), "", data.get("url", ""), data["source"])
+        media_queries = data.get("media") or []
         print(f"Пост из очереди: {path.name}")
     elif candidates:
         post, item = write_post(candidates)
     else:
         raise SystemExit("Нет новых материалов для поста")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    image_path = render(post.category, post.title, post.body, item.source,
-                        os.getenv("CHANNEL_HANDLE", "@your_channel"), OUTPUT / f"{stamp}.jpg")
-
+    handle = os.getenv("CHANNEL_HANDLE", "@your_channel")
     hashtags = " ".join("#" + h.lstrip("#").replace(" ", "") for h in post.hashtags)
-    caption = f"{post.caption}\n\nИсточник: {item.source}\n\n{hashtags}"
-    (OUTPUT / f"{stamp}.txt").write_text(caption, encoding="utf-8")
-    print(f"Картинка: {image_path}\n\n{caption}\n")
+    caption = f"{post.caption}\n\nИсточник: {item.source}"
 
-    record = {"time": stamp, "kind": item.kind, "url": item.url, "source_title": item.title,
-              "title": post.title, "image": image_path.name, "published_id": None}
+    if args.format == "reel":
+        from bot.media import fetch_photos
+        from bot.video import render_video
+        photos = fetch_photos(media_queries or [post.title], OUTPUT / "photos")
+        media_path = render_video(post.category, post.title, post.body, item.source, handle,
+                                  OUTPUT / f"{stamp}.mp4", photos=photos)
+        if photos:  # свободные лицензии требуют указать автора
+            caption += "\nФото: " + "; ".join(dict.fromkeys(ph.credit for ph in photos)) + " (Wikimedia Commons)"
+    else:
+        media_path = render(post.category, post.title, post.body, item.source, handle, OUTPUT / f"{stamp}.jpg")
+    caption += f"\n\n{hashtags}"
+    (OUTPUT / f"{stamp}.txt").write_text(caption, encoding="utf-8")
+    print(f"Файл: {media_path}\n\n{caption}\n")
+
+    record = {"time": stamp, "kind": item.kind, "format": args.format, "url": item.url,
+              "source_title": item.title, "title": post.title, "image": media_path.name, "published_id": None}
 
     if publish:
         from bot.hosting import upload
-        from bot.instagram import publish_photo
-        image_url = upload(image_path)
-        record["published_id"] = publish_photo(image_url, caption)
+        from bot.instagram import publish_photo, publish_reel
+        media_url = upload(media_path)
+        send = publish_reel if args.format == "reel" else publish_photo
+        record["published_id"] = send(media_url, caption)
         print(f"Опубликовано: {record['published_id']}")
         if queued:
             queued[0].unlink()  # в режиме предпросмотра пост остаётся в очереди
