@@ -47,51 +47,8 @@ def write_post(items: list[Item]) -> tuple[Post, Item]:
             return _write_with_claude(items)
         except Exception as e:
             print(f"[writer] Claude недоступен: {e}")
-    if os.getenv("GITHUB_TOKEN") and os.getenv("GH_MODEL", "openai/gpt-4.1-mini") != "none":
-        try:
-            return _write_with_github_models(items)
-        except Exception as e:
-            print(f"[writer] GitHub Models недоступен: {e}")
     print("[writer] собираю пост по шаблону")
     return _write_fallback(items)
-
-
-def _write_with_github_models(items: list[Item]) -> tuple[Post, Item]:
-    """Бесплатная модель из GitHub Models: в Actions работает по встроенному GITHUB_TOKEN, ключ не нужен."""
-    import json
-    import requests
-
-    schema = json.dumps(Post.model_json_schema(), ensure_ascii=False)
-    models = [os.getenv("GH_MODEL", "openai/gpt-4.1-mini"), "openai/gpt-4o-mini"]
-    errors = []
-    for model in dict.fromkeys(models):
-        resp = requests.post(
-            "https://models.github.ai/inference/chat/completions",
-            headers={"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
-                     "Accept": "application/json", "Content-Type": "application/json",
-                     "X-GitHub-Api-Version": "2022-11-28"},
-            json={
-                "model": model,
-                "messages": [
-                    {"role": "system", "content": SYSTEM + "\n\nОтветь только JSON-объектом по схеме:\n" + schema},
-                    {"role": "user", "content": "Кандидаты:\n\n" + _format_candidates(items)},
-                ],
-                "temperature": 0.7,
-                "stream": False,
-            },
-            timeout=120,
-        )
-        try:
-            content = resp.json()["choices"][0]["message"]["content"] or ""
-            # модель иногда оборачивает JSON в ```json ... ```
-            post = Post.model_validate_json(content[content.find("{"):content.rfind("}") + 1])
-        except Exception as e:
-            errors.append(f"{model}: {resp.status_code} {resp.headers.get('content-type')} "
-                          f"len={len(resp.content)} {resp.text[:300]!r} ({e})")
-            continue
-        idx = post.chosen_index if 0 <= post.chosen_index < len(items) else 0
-        return post, items[idx]
-    raise RuntimeError("; ".join(errors))
 
 
 def _write_fallback(items: list[Item]) -> tuple[Post, Item]:

@@ -15,10 +15,12 @@ from pathlib import Path
 
 from bot.render import render
 from bot.sources import Item, fetch_facts, fetch_news
-from bot.writer import write_post
+from bot.writer import Post, write_post
 
 ROOT = Path(__file__).resolve().parent
 HISTORY = ROOT / "data/history.json"
+CANDIDATES = ROOT / "data/candidates.json"
+QUEUE = ROOT / "data/queue"
 OUTPUT = ROOT / "output"
 
 SAMPLE = [
@@ -35,6 +37,21 @@ def load_history() -> list[dict]:
     if HISTORY.exists():
         return json.loads(HISTORY.read_text(encoding="utf-8"))
     return []
+
+
+def next_from_queue(seen: set) -> tuple[Path, dict] | None:
+    """Самый старый готовый пост из data/queue/, который ещё не публиковался."""
+    for path in sorted(QUEUE.glob("*.json")):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as e:
+            print(f"[queue] пропускаю {path.name}: {e}")
+            continue
+        if data.get("url") in seen:
+            path.unlink()
+            continue
+        return path, data
+    return None
 
 
 def pick_kind(requested: str, history: list[dict]) -> str:
@@ -55,20 +72,33 @@ def main() -> None:
     history = load_history()
     seen = {h["url"] for h in history} | {h["source_title"] for h in history}
 
+    queued = None
     if args.sample:
         candidates = SAMPLE
-        kind = "sample"
     else:
+        news, facts = fetch_news(ROOT / "sources.json"), fetch_facts()
+        fresh = lambda items: [c for c in items if c.url not in seen and c.title not in seen]
+        news, facts = fresh(news), fresh(facts)
+        # свежие материалы для Claude, который по расписанию пишет посты в data/queue/
+        CANDIDATES.write_text(json.dumps(
+            {"updated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
+             "news": [c.to_dict() for c in news[:30]], "facts": [c.to_dict() for c in facts[:15]]},
+            ensure_ascii=False, indent=1), encoding="utf-8")
+        queued = next_from_queue(seen)
         kind = pick_kind(args.kind, history)
-        candidates = fetch_news(ROOT / "sources.json") if kind == "news" else fetch_facts()
-        if not candidates:  # источник пуст, пробуем другой тип
-            kind = "fact" if kind == "news" else "news"
-            candidates = fetch_news(ROOT / "sources.json") if kind == "news" else fetch_facts()
-    candidates = [c for c in candidates if c.url not in seen and c.title not in seen][:25]
-    if not candidates:
-        raise SystemExit("Нет новых материалов для поста")
+        candidates = (news if kind == "news" else facts) or news or facts
+    candidates = candidates[:25]
 
-    post, item = write_post(candidates)
+    if queued:
+        path, data = queued
+        post = Post(chosen_index=0, **{k: data[k] for k in ("category", "title", "body", "caption", "hashtags")})
+        item = Item(data.get("kind", "news"), data.get("source_title", data["title"]), "", data.get("url", ""), data["source"])
+        path.unlink()
+        print(f"Пост из очереди: {path.name}")
+    elif candidates:
+        post, item = write_post(candidates)
+    else:
+        raise SystemExit("Нет новых материалов для поста")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     image_path = render(post.category, post.title, post.body, item.source,
                         os.getenv("CHANNEL_HANDLE", "@your_channel"), OUTPUT / f"{stamp}.jpg")
