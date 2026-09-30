@@ -72,20 +72,26 @@ def next_from_queue(seen: set, fmt: str = "photo") -> tuple[Path, dict] | None:
 
 def post_story(category: str, media_path: Path, media_url: str, handle: str) -> str | None:
     """Сторис к посту: ролик целиком или картинка поста в формате 9:16. Сбой сторис не отменяет пост."""
+    import time
     from bot.hosting import upload
     from bot.instagram import publish_story
     from bot.render import render_story
-    try:
-        if media_path.suffix == ".mp4":
-            story_id = publish_story(video_url=media_url)
-        else:
-            story = render_story(category, media_path, handle, media_path.with_name(media_path.stem + "-story.jpg"))
-            story_id = publish_story(image_url=upload(story))
-        print(f"Сторис: {story_id}")
-        return story_id
-    except Exception as e:
-        print(f"[story] не получилось: {e}")
-        return None
+    story_url = None
+    for attempt in range(2):  # сразу после ролика Instagram иногда отклоняет сторис, со второго раза проходит
+        try:
+            if media_path.suffix == ".mp4":
+                story_id = publish_story(video_url=media_url)
+            else:
+                if story_url is None:
+                    story = render_story(category, media_path, handle, media_path.with_name(media_path.stem + "-story.jpg"))
+                    story_url = upload(story)
+                story_id = publish_story(image_url=story_url)
+            print(f"Сторис: {story_id}")
+            return story_id
+        except Exception as e:
+            print(f"[story] попытка {attempt + 1} не получилась: {e}")
+            time.sleep(60)
+    return None
 
 
 def pick_kind(requested: str, history: list[dict]) -> str:
